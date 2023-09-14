@@ -1,0 +1,25 @@
+/* Your CSS file */
+/* Custom styling for the slider navigation arrows */
+.slick-prev,
+.slick-next {
+  width: 24px;
+  line-height: 1;
+  position: absolute;
+  border-radius: 50%;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 1;
+  cursor: pointer;
+  color: #000;
+  padding: 0 8px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  content: '\2190';
+}
+
+.slick-next:hover,
+.slick-prev:hover {
+    color: #000;
+}
