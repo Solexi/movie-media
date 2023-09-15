@@ -30,7 +30,7 @@ const Home: React.FC = () => {
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            fetchSearch(query, 2000);
+            fetchSearch(query, 1000);
             navigate(`/search/${query}`)
             setEnterPressed(true);
         }
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
         const newQuery = e.target.value;
         setQuery(newQuery);
         if (newQuery.trim() !== '') {
-            fetchSearch(newQuery, 2000);
+            fetchSearch(newQuery, 1000);
             setShowResults(true);
             setClearQuery(true)
             console.log(newQuery)
@@ -68,6 +68,10 @@ const Home: React.FC = () => {
 
     const handleSlideChange = (index: number) => {
         setCurrentSlide(index);
+    };
+
+    const handleMovieSelect = (movieId: number) => {
+        navigate(`/movie/${movieId}`);
     };
 
     const handleClearQuery = (e: any) => {
@@ -222,7 +226,8 @@ const Home: React.FC = () => {
                                                         searchResults={searchResults}
                                                         isSearching={isSearching}
                                                         loading={loading}
-                                                        movieId={searchResults[0].id}
+                                                        onMovieSelect={handleMovieSelect}
+                                                        // movieId={searchResults[0].id}
                                                     />
                                                 )}
                                                 {/* <Box
