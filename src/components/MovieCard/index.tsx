@@ -20,14 +20,6 @@ const MovieCard: React.FC = () => {
         }));
     }
 
-    const formatDateToUTC = (dateString: string | number | Date) => {
-        const date = new Date(dateString);
-        const utcDateString = `${date.getUTCFullYear()}-${(date.getUTCMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getUTCDate().toString().padStart(2, "0")}`;
-        return utcDateString;
-    };
-
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -47,7 +39,7 @@ const MovieCard: React.FC = () => {
     return (
         <Box
             display={"grid"}
-            gap={"20px"}
+            gap={"30px"}
             w={"100%"}
             gridTemplateColumns={"1.2fr 1.2fr 1.2fr 0fr"}
         // mx={80}
@@ -108,13 +100,13 @@ const MovieCard: React.FC = () => {
                                 fontWeight={700}
                                 fontSize={"18px"}
                                 mt={0}
-                                mb={0}
+                                mb={5}
                             >{movie.title}</Text>
                         </ChakraLink>
                         <Flex
                             flexDirection={"row"}
                             justifyContent={"space-between"}
-                            mb={-5}
+                            mb={-8}
                         >
                             <Flex
                                 flexDirection={"row"}

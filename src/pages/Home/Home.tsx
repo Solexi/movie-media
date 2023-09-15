@@ -13,11 +13,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import SearchCard from "../../components/SearchCard";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const Home: React.FC = () => {
     const [trendingMovies, setTrendingMovies] = useState<any[]>([]);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [query, setQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [showResults, setShowResults] = useState(false);
@@ -25,11 +26,11 @@ const Home: React.FC = () => {
     const [enterPressed, setEnterPressed] = useState(false);
     const navigate = useNavigate();
     const [isSearching, setIsSearching] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            // User pressed Enter, fetch search results
-            fetchSearch(query);
+            fetchSearch(query, 2000);
             navigate(`/search/${query}`)
             setEnterPressed(true);
         }
@@ -39,7 +40,7 @@ const Home: React.FC = () => {
         const newQuery = e.target.value;
         setQuery(newQuery);
         if (newQuery.trim() !== '') {
-            fetchSearch(newQuery);
+            fetchSearch(newQuery, 2000);
             setShowResults(true);
             setClearQuery(true)
             console.log(newQuery)
@@ -50,15 +51,20 @@ const Home: React.FC = () => {
         }
     };
 
-    const fetchSearch = async (query: string) => {
-        try {
-            const data = await fetchSearchResults(query);
-            setSearchResults(data.results);
-            console.log(searchResults);
-        } catch (error) {
-            console.error('Error fetching search results:', error);
-        }
+    const fetchSearch = (query: string, delayInMilliseconds: number) => {
+        setLoading(true); // Set loading to true when starting the search
+        setTimeout(async () => {
+            try {
+                const data = await fetchSearchResults(query);
+                setSearchResults(data.results);
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            } finally {
+                setLoading(false); // Set loading to false when the search is complete
+            }
+        }, delayInMilliseconds);
     };
+
 
     const handleSlideChange = (index: number) => {
         setCurrentSlide(index);
@@ -95,8 +101,19 @@ const Home: React.FC = () => {
         if (trendingMovies.length === 0) {
             fetchTrending();
         }
-        console.log(trendingMovies)
-    }, [trendingMovies])
+        console.log(trendingMovies);
+    }, [trendingMovies]);
+
+    // if (loading) {
+    //     return (
+    //         <Box
+    //             position={"relative"}
+    //         >
+    //             <LoadingSpinner />
+    //         </Box>
+    //     );
+    // }
+
     return (
         <Stack
             w={"100%"}
@@ -144,54 +161,86 @@ const Home: React.FC = () => {
                                     MovieBox
                                 </Text>
                             </>
-                            <InputGroup>
-                                <Input
-                                    value={query}
-                                    zIndex={2}
-                                    type="search"
-                                    placeholder={"What do you want to watch?"}
-                                    w={"36.46vw"}
-                                    h={"36px"}
-                                    color={"#FFFFFF"}
-                                    fontSize={"16px"}
-                                    fontWeight={400}
-                                    bg={"transparent"}
-                                    border={"2px solid #D1D5DB"}
-                                    px={"10px"}
-                                    borderRadius={"6px"}
-                                    mx={150}
-                                    _placeholder={{
-                                        color: "#FFFFFF",
-                                        fontSize: "16px",
-                                        fontWeight: 400,
-                                    }}
-                                    onChange={handleInputChange}
-                                    onKeyPress={handleKeyPress}
-                                />
-                                {clearQuery ? (
-                                    <InputRightElement
-                                        position={"relative"}
-                                        left={-180}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={faTimes}
-                                            color="#FFFFFF"
-                                            onClick={handleClearQuery}
-                                        />
-                                    </InputRightElement>) : (
-                                    <InputRightElement
-                                        children={
-                                            <FontAwesomeIcon
-                                                icon={faSearch}
-                                                color="#FFFFFF"
-                                            />
-                                        }
-                                        position={"relative"}
-                                        left={-180}
+                            <Flex>
+                                <InputGroup>
+                                    <Input
+                                        value={query}
+                                        zIndex={2}
+                                        // type="search"
+                                        w={"36.46vw"}
+                                        placeholder={"What do you want to watch?"}
+                                        h={"36px"}
+                                        color={"#FFFFFF"}
+                                        fontSize={"16px"}
+                                        fontWeight={400}
+                                        bg={"transparent"}
+                                        border={"2px solid #D1D5DB"}
+                                        px={"10px"}
+                                        borderRadius={"6px"}
+                                        mx={150}
+                                        _placeholder={{
+                                            color: "#FFFFFF",
+                                            fontSize: "16px",
+                                            fontWeight: 400,
+                                        }}
+                                        onChange={handleInputChange}
+                                        onKeyPress={handleKeyPress}
                                     />
-                                )}
-                            </InputGroup>
-                            {showResults && (
+                                    {clearQuery ? (
+                                        <InputRightElement
+                                            position={"relative"}
+                                            left={-180}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faTimes}
+                                                color="#FFFFFF"
+                                                onClick={handleClearQuery}
+                                            />
+                                        </InputRightElement>) : (
+                                        <InputRightElement
+                                            children={
+                                                <FontAwesomeIcon
+                                                    icon={faSearch}
+                                                    color="#FFFFFF"
+                                                />
+                                            }
+                                            position={"relative"}
+                                            left={-180}
+                                        />
+                                    )}
+                                </InputGroup>
+                                {searchResults.length > 1 ? (
+                                    <>
+                                        <Box>
+                                            <Box
+                                                position={"absolute"}
+                                                right={"31.6vw"}
+                                                w={"36.46vw"}
+                                            >
+                                                {showResults && (
+                                                    <SearchCard
+                                                        searchResults={searchResults}
+                                                        isSearching={isSearching}
+                                                        loading={loading}
+                                                        movieId={searchResults[0].id}
+                                                    />
+                                                )}
+                                                {/* <Box
+                                                    position={"relative"}
+                                                    zIndex={1}
+                                                >
+                                                    {loading &&
+                                                        <LoadingSpinner />
+                                                    } */}
+                                                    {/* {enterPressed && (
+                                                        <LoadingSpinner />
+                                                    )} */}
+                                                {/* </Box> */}
+                                            </Box>
+
+                                        </Box>
+                                    </>) : ("")}
+                                {/* {showResults && (
                                 <Box
                                     bg={"#d1d5db"}
                                     w={"490px"}
@@ -218,8 +267,8 @@ const Home: React.FC = () => {
                                         </>
                                     ) : null}
                                 </Box>
-                            )}
-
+                            )} */}
+                            </Flex>
                             <>
                                 <Text
                                     zIndex={10}
