@@ -230,19 +230,7 @@ const Home: React.FC = () => {
                                                         // movieId={searchResults[0].id}
                                                     />
                                                 )}
-                                                {/* <Box
-                                                    position={"relative"}
-                                                    zIndex={1}
-                                                >
-                                                    {loading &&
-                                                        <LoadingSpinner />
-                                                    } */}
-                                                    {/* {enterPressed && (
-                                                        <LoadingSpinner />
-                                                    )} */}
-                                                {/* </Box> */}
                                             </Box>
-
                                         </Box>
                                     </>) : ("")}
                                 {/* {showResults && (
@@ -453,7 +441,7 @@ const Home: React.FC = () => {
                     w={"107px"}
                     h={"24px"}
                     justify={"center"}
-                    align={"center"} /* Add this line to vertically center the content */
+                    align={"center"}
                     cursor={"pointer"}
                     mr={"8vw"}
                 >

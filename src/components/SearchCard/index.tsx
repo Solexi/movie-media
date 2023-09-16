@@ -15,12 +15,11 @@ interface SearchCardProps {
 
 const SearchCard: React.FC<SearchCardProps> = ({ searchResults, isSearching, onMovieSelect, loading }) => {
     const [genreNames, setGenreNames] = useState<string[]>([]);
-    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchGenres = async () => {
             try {
-                const genreNames = await fetchMovieGenres(searchResults[0]?.genre_ids); // Assuming you want to fetch genres for the first movie in searchResults
+                const genreNames = await fetchMovieGenres(searchResults[0]?.genre_ids);
                 setGenreNames(genreNames);
             } catch (error) {
                 console.error("Error fetching genre names:", error);
