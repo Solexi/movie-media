@@ -52,15 +52,17 @@ const Home: React.FC = () => {
     };
 
     const fetchSearch = (query: string, delayInMilliseconds: number) => {
-        setLoading(true); // Set loading to true when starting the search
+        setLoading(true);
         setTimeout(async () => {
             try {
+                setIsSearching(true);
                 const data = await fetchSearchResults(query);
                 setSearchResults(data.results);
             } catch (error) {
                 console.error('Error fetching search results:', error);
             } finally {
-                setLoading(false); // Set loading to false when the search is complete
+                setLoading(false);
+                setIsSearching(false);
             }
         }, delayInMilliseconds);
     };
@@ -107,16 +109,6 @@ const Home: React.FC = () => {
         }
         console.log(trendingMovies);
     }, [trendingMovies]);
-
-    // if (loading) {
-    //     return (
-    //         <Box
-    //             position={"relative"}
-    //         >
-    //             <LoadingSpinner />
-    //         </Box>
-    //     );
-    // }
 
     return (
         <Stack
